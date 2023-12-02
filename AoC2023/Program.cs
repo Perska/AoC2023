@@ -34,7 +34,7 @@ namespace AoC2023
 		static void Main()
 		{
 			bool keepGoing = true;
-			
+
 			//Console.WriteLine(SuperReadLine());
 			while (keepGoing)
 			{
