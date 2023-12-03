@@ -14,72 +14,22 @@ namespace AoC2023
 		[NoTrailingNewLine] // Uncomment to not include an extra blank line in the input at the end
 		static void Day01(List<string> input)
 		{
-			string[] words = new[] { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-			long sum = 0;
+			Dictionary<string, int> words = new Dictionary<string, int>() { { "one", 1 }, { "two", 2 }, { "three", 3 }, { "four", 4 }, { "five", 5 }, { "six", 6 }, { "seven", 7 }, { "eight", 8 }, { "nine", 9 } };
+			string pattern1 = "[0-9]";
+			string pattern2 = "[0-9]|one|two|three|four|five|six|seven|eight|nine";
+			Regex regex1 = new Regex($"^.*?(?=({pattern1})).*({pattern1}).*$");
+			Regex regex2 = new Regex($"^.*?(?=({pattern2})).*({pattern2}).*$");
+			long sum1 = 0, sum2 = 0;
 			foreach (string line in input)
 			{
-				int a = 0, b = 0;
-				for (int i = 0; i < line.Length; i++)
-				{
-					if ('0' <= line[i] && line[i] <= '9')
-					{
-						a = line[i] - '0';
-						break;
-					}
-				}
-				for (int i = line.Length - 1; i >= 0; i--)
-				{
-					if ('0' <= line[i] && line[i] <= '9')
-					{
-						b = line[i] - '0';
-						break;
-					}
-				}
-				sum += a * 10 + b;
+				var match = regex1.Match(line);
+				sum1 += int.Parse(match.Groups[1].Value) * 10 + int.Parse(match.Groups[2].Value);
+				match = regex2.Match(line);
+				string a = match.Groups[1].Value, b = match.Groups[2].Value;
+				sum2 += (char.IsDigit(a[0]) ? int.Parse(a) : words[a]) * 10 + (char.IsDigit(b[0]) ? int.Parse(b) : words[b]);
 			}
-			WriteLine($"Part 1: The sum is {sum}");
-			sum = 0;
-			foreach (string line in input)
-			{
-				int a = 0, b = 0;
-				for (int i = 0; i < line.Length; i++)
-				{
-					if ('0' <= line[i] && line[i] <= '9')
-					{
-						a = line[i] - '0';
-						break;
-					}
-					for (int j = 0; j < words.Length; j++)
-					{
-						if (i + words[j].Length < line.Length && line.Substring(i, words[j].Length) == words[j])
-						{
-							a = j + 1;
-							goto aOK;
-						}
-					}
-				}
-			aOK:;
-				for (int i = line.Length - 1; i >= 0; i--)
-				{
-					if ('0' <= line[i] && line[i] <= '9')
-					{
-						b = line[i] - '0';
-						break;
-					}
-					for (int j = 0; j < words.Length; j++)
-					{
-						if (i - words[j].Length + 1 >= 0 && line.Substring(i - words[j].Length + 1, words[j].Length) == words[j])
-						{
-							b = j + 1;
-							goto bOK;
-						}
-					}
-				}
-			bOK:;
-				WriteLine(a * 10 + b);
-				sum += a * 10 + b;
-			}
-			WriteLine($"Part 2: The sum is {sum}");
+			WriteLine($"Part 1: The sum is {sum1}");
+			WriteLine($"Part 2: The sum is {sum2}");
 		}
 	}
 }
