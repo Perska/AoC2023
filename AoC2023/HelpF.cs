@@ -59,5 +59,19 @@ namespace AoC2023
 			if (dict.ContainsKey(key)) return dict[key];
 			return def;
 		}
+
+		public static char[,] ToCharMap(this List<string> input, out int maxX, out int maxY)
+		{
+			maxX = input[0].Length, maxY = input.Count;
+			char[,] map = new char[maxX, maxY];
+			for (int y = 0; y < maxY; y++)
+			{
+				for (int x = 0; x < maxX; x++)
+				{
+					map[y, x] = input[y][x];
+				}
+			}
+			return map;
+		}
 	}
 }
