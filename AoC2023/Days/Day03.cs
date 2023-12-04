@@ -67,8 +67,8 @@ namespace AoC2023
 				}
 				if (symbol.type == '*' && adjacent == 2) gearsSum += ratio;
 			}
-			WriteLine(partsSum);
-			WriteLine(gearsSum);
+			WriteLine($"Part 1: {partsSum}");
+			WriteLine($"Part 1: {gearsSum}");
 		}
 	}
 }

@@ -62,7 +62,8 @@ namespace AoC2023
 
 		public static char[,] ToCharMap(this List<string> input, out int maxX, out int maxY)
 		{
-			maxX = input[0].Length, maxY = input.Count;
+			maxX = input[0].Length;
+			maxY = input.Count;
 			char[,] map = new char[maxX, maxY];
 			for (int y = 0; y < maxY; y++)
 			{

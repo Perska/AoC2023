@@ -11,7 +11,7 @@ namespace AoC2023
 	partial class Program
 	{
 		// [UseSRL] // Uncomment if you wanna use SuperReadLine
-		// [NoTrailingNewLine] // Uncomment to not include an extra blank line in the input at the end
+		[NoTrailingNewLine] // Uncomment to not include an extra blank line in the input at the end
 		static void Day00(List<string> input)
 		{
 			// My code goes here...
