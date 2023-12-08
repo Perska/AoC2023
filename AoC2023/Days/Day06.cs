@@ -25,8 +25,6 @@ namespace AoC2023
 				margin = margin * race(times[i], distances[i]);
 			}
 
-			WriteLine(margin);
-
 			int race(long time, long distance)
 			{
 				int winners = 0;
@@ -37,7 +35,8 @@ namespace AoC2023
 				return winners;
 			}
 
-			WriteLine(race(truetime, truedistance));
+			WriteLine($"Part 1: {margin}");
+			WriteLine($"Part 2: {race(truetime, truedistance)}");
 		}
 	}
 }

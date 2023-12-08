@@ -49,7 +49,7 @@ namespace AoC2023
 			{
 				totals += list[i].bid * (i + 1);
 			}
-			WriteLine(totals);
+			WriteLine($"Part 1: {totals}");
 
 			cards = "AKQT98765432J";
 			foreach (var line in list)
@@ -76,7 +76,7 @@ namespace AoC2023
 			{
 				totals += list[i].bid * (i + 1);
 			}
-			WriteLine(totals);
+			WriteLine($"Part 2: {totals}");
 
 			int compare((string card, int bid) a, (string card, int bid) b)
 			{

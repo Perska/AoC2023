@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using static System.Console;
+using static AoC2023.Useful;
 
 namespace AoC2023
 {
