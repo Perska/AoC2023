@@ -69,6 +69,20 @@ namespace AoC2023
 						}
 					}
 				}
+
+				/*
+				for (int o = 0; o < maxY * 3; o++)
+				{
+					for (int p = 0; p < maxX * 3; p++)
+					{
+						int t = visited.Read((p / 3, o / 3));
+						if (t != 0) Write($"#"); else
+							Write($"{bigmap[o, p]}");
+					}
+					WriteLine();
+				}
+				WriteLine();*/
+
 				(explore, exploreNext) = (exploreNext, explore);
 			}
 			WriteLine($"Part 1: {farthest}");
@@ -93,6 +107,22 @@ namespace AoC2023
 			explore.Enqueue((maxX * 3, 0, 0));
 			explore.Enqueue((-1, maxY * 3 - 1, 0));
 			explore.Enqueue((maxX * 3, maxY * 3 - 1, 0));
+
+			//Clear();
+			//for (int o = 0; o < maxY * 3; o++)
+			//{
+			//	for (int p = 0; p < maxX * 3; p++)
+			//	{
+			//		/*int t = visited.Read((p / 3, o / 3));
+			//		if (t != 0) Write($"#");
+			//		else*/
+			//			Write($"{bigmap[o, p]}");
+			//	}
+			//	WriteLine();
+			//}
+			//WriteLine();
+			//ReadLine();
+
 			while (explore.Count > 0)
 			{
 				while (explore.Count > 0)
@@ -112,9 +142,36 @@ namespace AoC2023
 						}
 					}
 				}
+
+				/*Clear();
+				for (int o = 0; o < maxY * 3; o++)
+				{
+					for (int p = 0; p < maxX * 3; p++)
+					{
+						int t = visited.Read((p, o));
+						if (t != 0) Write($"O");
+						else Write($"{bigmap[o, p]}");
+					}
+					WriteLine();
+				}
+				WriteLine();
+				ReadLine();*/
+
 				(explore, exploreNext) = (exploreNext, explore);
 			}
-
+			/*for (int o = 0; o < maxY * 3; o++)
+			{
+				for (int p = 0; p < maxX * 3; p++)
+				{
+					int t = visited.Read((p, o));
+					if (t != 0) Write($"O");
+					else Write($"{bigmap[o, p]}");
+				}
+				WriteLine();
+			}
+			WriteLine();
+			ReadLine();
+			Clear();*/
 			int nest = 0;
 			for (int j = 0; j < maxY; j++)
 			{
@@ -123,8 +180,18 @@ namespace AoC2023
 					if (!visited.ContainsKey((i * 3, j * 3)) && bigmap[j * 3 + 1, i * 3 + 1] != '#')
 					{
 						nest++;
+						//Write("I");
+						/*for (int k = 0; k < 9; k++)
+						{
+							bigmap[j * 3 + k / 3, i * 3 + k % 3] = reset[k];
+						}*/
+					}
+					else
+					{
+						//Write(map[j, i]);
 					}
 				}
+				//WriteLine();
 			}
 
 			WriteLine($"Part 2: {nest}");
