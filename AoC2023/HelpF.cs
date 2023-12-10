@@ -63,7 +63,7 @@ namespace AoC2023
 		{
 			maxX = input[0].Length;
 			maxY = input.Count;
-			char[,] map = new char[maxX, maxY];
+			char[,] map = new char[maxY, maxX];
 			for (int y = 0; y < maxY; y++)
 			{
 				for (int x = 0; x < maxX; x++)
