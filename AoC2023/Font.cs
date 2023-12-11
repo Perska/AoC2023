@@ -8,7 +8,7 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace AoC2022
+namespace AoC2023
 {
 	public class Font
 	{
@@ -17,11 +17,11 @@ namespace AoC2022
 
 		public Font(string fontname, GraphicsDevice device)
 		{
-			Texture = embeddedTexture($"AoC2022.{fontname}.bmp", device);
+			Texture = embeddedTexture($"AoC2023.{fontname}.bmp", device);
 
 			string[] box = null;
 			Assembly assembly = Assembly.GetExecutingAssembly();
-			using (Stream stream = assembly.GetManifestResourceStream($"AoC2022.{fontname}.txt"))
+			using (Stream stream = assembly.GetManifestResourceStream($"AoC2023.{fontname}.txt"))
 			{
 				using (StreamReader text = new StreamReader(stream))
 				{

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 
-namespace AoC2022
+namespace AoC2023
 {
 	partial class Program
 	{
@@ -146,17 +146,17 @@ namespace AoC2022
 				return sfx;
 			}
 
-			public void DrawBox(Rectangle rectangle, Color color)
+			public void DrawBox(Rectangle rectangle, Color color, float depth = 0)
 			{
-				SpriteBatch.Draw(Pixel, rectangle, color);
+				SpriteBatch.Draw(Pixel, rectangle, null, color, 0, Vector2.Zero, 0, depth);
 			}
 
-			public void DrawLine(Vector2 from, Vector2 to, Color color)
+			public void DrawLine(Vector2 from, Vector2 to, Color color, float depth = 0)
 			{
 				DrawLine(from, to, color, 0, 0, WindowWidth - 1, WindowHeight - 1);
 			}
 
-			public void DrawLine(Vector2 from, Vector2 to, Color color, int minX, int minY, int maxX, int maxY)
+			public void DrawLine(Vector2 from, Vector2 to, Color color, int minX, int minY, int maxX, int maxY, float depth = 0)
 			{
 				from = (from - new Vector2(minX, minY)) / new Vector2(maxX - minX, maxY - minY) * new Vector2(WindowWidth - 1, WindowHeight - 1);
 				to = (to - new Vector2(minX, minY)) / new Vector2(maxX - minX, maxY - minY) * new Vector2(WindowWidth - 1, WindowHeight - 1);
@@ -165,7 +165,7 @@ namespace AoC2022
 					(float)Math.Atan2(to.Y - from.Y, to.X - from.X) + (float)Math.PI * 2,
 					Vector2.Zero,
 					new Vector2((float)Math.Ceiling(Vector2.Distance(from, to)), 1),
-					0, 0);
+					0, depth);
 			}
 
 			public Vector2 MapVector(Vector2 vector, int minX, int minY, int maxX, int maxY)

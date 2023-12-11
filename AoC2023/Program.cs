@@ -64,13 +64,13 @@ namespace AoC2023
 
 		static bool AutoSpriteBatch, OtherBuffer;
 
-		static void StartDraw(bool clear, bool otherBuffer = false, bool autoSpriteBatch = true)
+		static void StartDraw(bool clear, bool useDepth = false, bool otherBuffer = false, bool autoSpriteBatch = true)
 		{
 			AutoSpriteBatch = autoSpriteBatch;
 			OtherBuffer = otherBuffer;
 			visual.GraphicsDevice.SetRenderTarget(otherBuffer ? visual.RenderTarget2 : visual.RenderTarget);
 			if (clear) visual.GraphicsDevice.Clear(Color.Transparent);
-			if (autoSpriteBatch) visual.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+			if (autoSpriteBatch) visual.SpriteBatch.Begin(useDepth ? SpriteSortMode.FrontToBack : SpriteSortMode.Deferred, null, SamplerState.PointClamp);
 		}
 
 		static void StopDraw()
@@ -128,7 +128,10 @@ namespace AoC2023
 				while (true)
 				{
 					long elaps;
-					while ((elaps = stopwatch.ElapsedMilliseconds) < next) ;
+					while ((elaps = stopwatch.ElapsedMilliseconds) < next)
+					{
+						visual._resize();
+					}
 					next = elaps + frameSpeed;
 					waitScreen = false;
 					Application.DoEvents();
