@@ -33,9 +33,25 @@ namespace AoC2023
 				StringBuilder b = new StringBuilder();
 				foreach (var num in Numbers)
 				{
-					b.Append($"{num} ");
+					b.Append($" {num} ");
 				}
 				return b.ToString();
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (!(obj is Sequence)) return false;
+				var hint = obj as Sequence;
+				if (Count == hint.Count)
+				{
+					bool ok = true;
+					for (int j = 0; j < Count; j++)
+					{
+						if (Numbers[j] != hint.Numbers[j]) ok = false;
+					}
+					if (ok) return true;
+				}
+				return false;
 			}
 
 			public override int GetHashCode()
@@ -50,121 +66,53 @@ namespace AoC2023
 		{
 			long arrangements = 0;
 			long bigArrangements = 0;
-			int a = 0;
-			//var compare = new ListCompare();
+			var cache = new Dictionary<(string pattern, Sequence finds, int index), long>();
+			List<string> patterns = new List<string>();
 			foreach (var line in input)
 			{
 				var data = line.SplitToStringArray(" ", true);
 				var pattern = data[0];
 				var hint = data[1].SplitToIntArray(',').ToList();
 				var bigPattern = pattern + "?" + pattern + "?" + pattern + "?" + pattern + "?" + pattern;
-				var bigHint = hint.ToList();
-				bigHint.AddRange(hint);
-				bigHint.AddRange(hint);
-				bigHint.AddRange(hint);
-				bigHint.AddRange(hint);
+				var bigHint = hint.Concat(hint).Concat(hint).Concat(hint).Concat(hint).ToList();
 				bigHint.Add(0);
 				hint.Add(0);
-				arrangements += arrange(pattern, hint);
-				bigArrangements += arrange(bigPattern, bigHint);
-				WriteLine($"{a + 1}/{input.Count}");
-				a++;
+				arrangements += arrange(pattern, new Sequence(), 0, hint);
+				bigArrangements += arrange(bigPattern, new Sequence(), 0, bigHint);
+				cache.Clear(); // If I don't clear the cache between runs things get miscounted because some of the unfolded patterns may match the original patterns
 			}
+			WriteLine($"Part 1: {arrangements}");
+			WriteLine($"Part 2: {bigArrangements}");
 
-			WriteLine(arrangements);
-			WriteLine(bigArrangements);
-
-
-			long arrange(string pattern, List<int> hint)
+			long arrange(string pattern, Sequence sequence, int index, List<int> hint)
 			{
-				//var finds = new List<List<int>>();
-				//var newFinds = new List<List<int>>();
-				var finds = new Dictionary<Sequence, int>();
-				var newFinds = new Dictionary<Sequence, int>();
-				finds.Add(new Sequence(), 1);
-				for (int i = 0; i < pattern.Length; i++)
+				long hit = cache.Read((pattern, sequence, index), -1);
+				if (hit != -1) return hit;
+				if (index == pattern.Length)
 				{
-					WriteLine($" {i + 1}/{pattern.Length}");
-					//WriteLine(finds.Count);
-					if (i == 13)
-						;
-					if (pattern[i] == '?')
-					{
-						foreach (var x in finds)
-						{
-							int count = x.Value;
-							var ok = x.Key;
-							var bad = new Sequence(x.Key);
-							append(ok, true);
-							append(bad, false);
-							if (evaluate(ok)) add(newFinds, new KeyValuePair<Sequence, int>(ok, count));
-							if (evaluate(bad)) add(newFinds, new KeyValuePair<Sequence, int>(bad, count));
-						}
-					}
-					else
-					{
-						foreach (var x in finds)
-						{
-							append(x.Key, pattern[i] == '#');
-							//x.Append(pattern[i]); 
-							if (evaluate(x.Key)) add(newFinds, new KeyValuePair<Sequence, int>(x.Key, x.Value));
-						}
-						//find.Append(pattern[i]);
-					}
-					//finds.AddRange(newFinds);
-					//newFinds.Clear();
-					//foreach (var find in newFinds)
-					//{
-					//	var str = find.ToString();
-					//	var match = str.SplitToStringArray(".", true);
-					//	/*if (match.Length <= hint.Length)
-					//	{
-					//		bool ok = true;
-					//		for (int j = 0; j < match.Length; j++)
-					//		{
-					//			if (match[j].Length > hint[j]) ok = false;
-					//		}
-					//		if (ok) newFinds.Add(find);
-					//	}*/
-					//	//Write($"{str} ");
-					//	//foreach (var num in match)
-					//	//{
-					//	//	Write($"{num.Length} ");
-					//	//}
-					//	//WriteLine();
-					//}
-					//WriteLine();
-					//finds = newFinds.Distinct(compare).ToList();
-					//finds.Clear();
-					//foreach (var item in newFinds)
-					//{
-					//	
-					//}
-					(finds, newFinds) = (newFinds, finds);
-					newFinds.Clear();
+					var x = new Sequence(sequence);
+					if (x.Numbers[sequence.Count - 1] != 0) x.Numbers.Add(0);
+					return cache[(pattern, sequence, index)] = (match(x) ? 1 : 0);
+				}
+				long count = 0;
+				if (pattern[index] == '?')
+				{
+					var ok = new Sequence(sequence);
+					var bad = new Sequence(sequence);
+					append(ok, true);
+					append(bad, false);
+					if (evaluate(ok)) count += arrange(pattern, ok, index + 1, hint);
+					if (evaluate(bad)) count += arrange(pattern, bad, index + 1, hint);
+				}
+				else
+				{
+					var x = new Sequence(sequence);
+					append(x, pattern[index] == '#');
+					if (evaluate(x)) count += arrange(pattern, x, index + 1, hint);
 				}
 
-				long total = 0;
-				foreach (var find in finds)
-				{
-					if (find.Key.Numbers[find.Key.Count - 1] != 0) find.Key.Numbers.Add(0);
-					if (find.Key.Numbers.SequenceEqual(hint)) total += find.Value;
-				}
-				return total;
-				//return finds.Where(x => x.Key.Numbers.SequenceEqual(hint)).Count();
-
-
-				void add(Dictionary<Sequence, int> thing, KeyValuePair<Sequence, int> item)
-				{
-					if (thing.ContainsKey(item.Key))
-					{
-						thing[item.Key] += item.Value;
-					}
-					else
-					{
-						thing[item.Key] = item.Value;
-					}
-				}
+				cache[(pattern, sequence, index)] = count;
+				return count;
 
 				void append(Sequence x, bool damaged)
 				{
@@ -178,14 +126,22 @@ namespace AoC2023
 					}
 				}
 
+				bool match(Sequence test)
+				{
+					if (test.Count == hint.Count)
+					{
+						bool ok = true;
+						for (int j = 0; j < test.Count; j++)
+						{
+							if (test.Numbers[j] != hint[j]) ok = false;
+						}
+						if (ok) return true;
+					}
+					return false;
+				}
+
 				bool evaluate(Sequence test)
 				{
-					//Write($"{str} ");
-					//foreach (var num in match)
-					//{
-					//	Write($"{num.Length} ");
-					//}
-					//WriteLine();
 					if (test.Count <= hint.Count)
 					{
 						bool ok = true;
@@ -200,18 +156,5 @@ namespace AoC2023
 				}
 			}
 		}
-
-		/*private class ListCompare : IEqualityComparer<List<int>>
-		{
-			public bool Equals(List<int> a, List<int> b)
-			{
-				return a.SequenceEqual(b);
-			}
-
-			public int GetHashCode(List<int> obj)
-			{
-				return base.GetHashCode();
-			}
-		}*/
 	}
 }
