@@ -11,14 +11,6 @@ namespace AoC2023
 {
 	partial class Program
 	{
-		//class Workflow
-		//{
-		//	struct Rule
-		//	{
-		//		char Cheks
-		//	}
-		//}
-
 		// [UseSRL] // Uncomment if you wanna use SuperReadLine
 		[NoTrailingNewLine] // Uncomment to not include an extra blank line in the input at the end
 		static void Day19(List<string> input)
